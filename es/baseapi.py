@@ -193,6 +193,7 @@ class BaseCursor:
         self.sql_path = kwargs.get("sql_path", DEFAULT_SQL_PATH)
         self.fetch_size = kwargs.get("fetch_size", DEFAULT_FETCH_SIZE)
         self.time_zone: Optional[str] = kwargs.get("time_zone")
+        self.page_timeout: Optional[str] = kwargs.get('page_timeout')
         # This read/write attribute specifies the number of rows to fetch at a
         # time with .fetchmany(). It defaults to 1 meaning to fetch a single
         # row at a time.
@@ -314,6 +315,9 @@ class BaseCursor:
             payload["fetch_size"] = self.fetch_size
         if self.time_zone is not None:
             payload["time_zone"] = self.time_zone
+        if self.page_timeout is not None:
+            payload['page_timeout'] = self.page_timeout
+
         path = f"/{self.sql_path}/"
         try:
             response = self.es.transport.perform_request("POST", path, body=payload)
